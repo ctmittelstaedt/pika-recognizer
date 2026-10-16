@@ -19,7 +19,7 @@ library(dendextend)
 library(dplyr)
 
 # Define input directory
-input.dir <- file.path("data","individuality", "MB_individuals")
+input.dir <- file.path("C:/PythonGitHub/Mittelstaedt_Undergrad_Thesis/data/individuality/MB_individuals")
 
 # List all .wav files in directory
 L = list.files(input.dir, pattern = "*.wav", full.names = TRUE, recursive = TRUE)
@@ -39,15 +39,15 @@ mfcc.vector.list <- lapply(L, function(filehandle) {
     # Read in wav file and filter
     w <- readWave(filehandle)
     
-    # Find duration of .wav file and divide into 5 windows
+    # Find duration of .wav file and divide into 6 windows
     wav.dur <- length(w) / w@samp.rate  # Duration of the .wav file in seconds
-    win.time <- wav.dur / 6  # Duration of each window, dividing the audio into 5 equal windows
+    win.time <- wav.dur/6  # Duration of each window, dividing the audio into 6 equal windows
     
     # Calculate MFCCs
     melfcc.output <- melfcc(
       w, 
       minfreq = 700, 
-      hoptime = win.time, 
+      hoptime = win.time-0.0001, #windows must overlap a tiny bit to allow all 6 windows to be analyzed
       maxfreq = 9000, 
       numcep = 12, 
       wintime = win.time
@@ -58,10 +58,10 @@ mfcc.vector.list <- lapply(L, function(filehandle) {
     
     # Ensure correct number of time windows are used for MFCC and delta coefficients
     # Also append .wav duration
-    # Extract the first 5 windows of MFCCs and deltas
+    # Extract the first 6 windows of MFCCs and deltas
     mfcc.vector <- c(
-      as.vector(t(melfcc.output[1:5, 2:12])),  # First 5 time windows of MFCCs
-      as.vector(t(deltas.output[1:5, 2:12])), # First 5 time windows of delta MFCCs
+      as.vector(t(melfcc.output[1:6, 2:12])),  # 6 windows of MFCCs
+      as.vector(t(deltas.output[1:6, 2:12])), # 6  windows of delta MFCCs
       wav.dur                                  # Duration of the audio file
     )
     
@@ -71,7 +71,6 @@ mfcc.vector.list <- lapply(L, function(filehandle) {
     return(NULL)  # Return NULL in case of an error, or handle as needed
   })
 })
-
 
 # Convert the list to a vector
 vec <- unlist(mfcc.vector.list)
@@ -115,12 +114,12 @@ str(mfcc.data.frame)
 # Remove non-MFCC/delta columns
 x <- mfcc.data.frame |> dplyr::select(-c(loc, filehandles, id))
 x
-x2 <- x |> dplyr::select(1:111)
+x2 <- x |> dplyr::select(1:133)
 x2
 
 
 # Run affinity propagation
-apres <- apcluster(negDistMat(r=2), x2, q=0.9, details=TRUE, maxits = 100000,
+apres <- apcluster(negDistMat(r=2), x2, q=0.7, details=TRUE, maxits = 100000,
                    convits = 10000,
                    nonoise = T
                    )
