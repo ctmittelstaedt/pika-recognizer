@@ -19,7 +19,7 @@ library(dendextend)
 library(dplyr)
 
 # Define input directory
-input.dir <- file.path("C:/PythonGitHub/Mittelstaedt_Undergrad_Thesis/data/individuality/MB_individuals")
+input.dir <- file.path("data","individuality", "MB_individuals")
 
 # List all .wav files in directory
 L = list.files(input.dir, pattern = "*.wav", full.names = TRUE, recursive = TRUE)
