@@ -58,7 +58,7 @@ mfcc.vector.list <- lapply(L, function(filehandle) {
     
     # Ensure correct number of time windows are used for MFCC and delta coefficients
     # Also append .wav duration
-    # Extract the first 6 windows of MFCCs and deltas
+    # Extract 6 windows of MFCCs and deltas
     mfcc.vector <- c(
       as.vector(t(melfcc.output[1:6, 2:12])),  # 6 windows of MFCCs
       as.vector(t(deltas.output[1:6, 2:12])), # 6  windows of delta MFCCs
