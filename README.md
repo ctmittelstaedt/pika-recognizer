@@ -17,3 +17,5 @@ Contains all other data except for training/validation/testing audio recordings 
 
 ### **figures folder**  ####
 Contains figures from all analyses.
+
+*Note that the study site Nàday Gän (NG) may be referred to as Mt. Decoeli (MD) in the data and code.
